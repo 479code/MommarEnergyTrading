@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://momarenergytrading.com/sitemap.xml
