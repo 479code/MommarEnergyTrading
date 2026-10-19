@@ -1,5 +1,15 @@
 ErrorDocument 404 /404.html
 
+Redirect 301 /capabilities.html /services.html
+Redirect 301 /drilling.html /services.html
+Redirect 301 /marine.html /services.html
+Redirect 301 /operations.html /engineering.html
+Redirect 301 /specialist.html /procurement.html
+Redirect 301 /solar.html /cng.html
+Redirect 301 /abuja.html /projects.html
+Redirect 301 /hse.html /company.html
+Redirect 301 /responsibility.html /company.html
+
 <IfModule mod_headers.c>
   Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-Du+OJKJSbdUgz5nrHeWWINvez6XKDDU/tyj/5c2uvwo='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'"
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
