@@ -5,6 +5,7 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
   window.NS = { $, $$, reduce, fine };
+  if (reduce) $$('animateMotion').forEach(a => a.remove()); // supply-map tankers stay parked
 
   /* Header: transparent over the hero, solid once scrolled */
   const header = $('.site-header');
@@ -60,6 +61,9 @@
     en.target.classList.add('in');
     if (en.target.matches('[data-split="scroll"]')) splitIn(en.target);
     if (en.target.matches('.art')) en.target.classList.add('drawn');
+    if (en.target.matches('.map')) $$('animateMotion', en.target).forEach((a, i) => setTimeout(() => {
+      a.parentElement.style.opacity = 1; a.beginElement(); // each tanker runs its route once (no endless motion)
+    }, 2600 + i * 400));
     io.unobserve(en.target);
   }), { rootMargin: '0px 0px -12% 0px' });
   $$('.rv, [data-split="scroll"]').forEach(el => io.observe(el));
@@ -166,7 +170,7 @@
     picker.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b) return;
       $$('button', picker).forEach(x => x.setAttribute('aria-pressed', x === b));
-      line.textContent = `${b.dataset.id} · Jet A1 · 58,000 litres capacity · 1 of 8 tanks`;
+      line.textContent = `${b.dataset.id} · Jet A-1 · 58,000 litres capacity · 1 of 8 tanks`;
     });
   }
 
@@ -225,6 +229,44 @@
     });
     show(interest ? 2 : 1);
   }
+
+  /* Single-step forms (supplier registration). Same delivery rules as the enquiry flow:
+     Netlify / form endpoint when configured, otherwise an email prepared in the visitor's mail app. */
+  $$('form[data-simple-form]').forEach(form => {
+    const box = form.closest('[data-form-box]'), done = $('[data-done]', box), error = $('[data-error]', box);
+    const endpoint = (form.dataset.endpoint || '').trim(), netlify = form.dataset.provider === 'netlify';
+    const btn = $('button[type=submit]', form);
+    $$('[data-mode]', box).forEach(el => { el.hidden = el.dataset.mode !== (endpoint ? 'online' : 'mail'); });
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      const picked = $$('input[name=category]:checked', form).map(c => c.value);
+      form.elements.categories.value = picked.join(', ') || 'Not specified';
+      const data = new FormData(form);
+      data.delete('category');
+      if (data.get('_gotcha') || data.get('bot-field')) { form.hidden = true; done.hidden = false; return; }
+      const subject = (form.dataset.subject || 'Website form') + ': ' + (data.get('company') || '');
+      if (!endpoint) {
+        const body = [...data.entries()].filter(([k]) => !/^(form-name|subject|bot-field|_gotcha)$/.test(k)).map(([k, v]) => `${k}: ${v}`).join('\n');
+        location.href = `mailto:info@momarenergy.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        return;
+      }
+      if (netlify) data.set('subject', subject); else data.append('_subject', subject);
+      const label = btn.innerHTML;
+      btn.disabled = true; btn.textContent = 'Sending…'; error.hidden = true;
+      try {
+        const res = await fetch(endpoint, netlify
+          ? { method: 'POST', body: new URLSearchParams(data).toString(), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+          : { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+        if (!res.ok) throw new Error(res.status);
+        form.reset(); form.hidden = true; done.hidden = false; done.focus({ preventScroll: true });
+      } catch (err) {
+        error.hidden = false;
+      } finally {
+        btn.disabled = false; btn.innerHTML = label;
+      }
+    });
+  });
 
   $$('[data-year]').forEach(el => el.textContent = new Date().getFullYear());
 })();
