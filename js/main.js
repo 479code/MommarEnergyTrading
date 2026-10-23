@@ -66,7 +66,7 @@
     }, 2600 + i * 400));
     io.unobserve(en.target);
   }), { rootMargin: '0px 0px -12% 0px' });
-  $$('.rv, [data-split="scroll"]').forEach(el => io.observe(el));
+  $$('.rv, .stag, .angle-in, [data-split="scroll"]').forEach(el => io.observe(el));
 
   /* Line illustrations draw themselves once visible */
   $$('.art').forEach(art => {
@@ -170,7 +170,7 @@
     picker.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b) return;
       $$('button', picker).forEach(x => x.setAttribute('aria-pressed', x === b));
-      line.textContent = `${b.dataset.id} · Jet A-1 · 58,000 litres capacity · 1 of 8 tanks`;
+      line.textContent = `${b.dataset.id} · Jet A-1 · 58,000 litres capacity · tank ${$$("button", picker).indexOf(b) + 1} of 8`;
     });
   }
 
@@ -267,6 +267,92 @@
       }
     });
   });
+
+
+  /* Project page hero: the project's photographs slide in one after another */
+  $$('[data-hero-slides]').forEach(hero => {
+    const imgs = $$('.ph-slides img', hero);
+    if (imgs.length < 2 || reduce) return;
+    let i = 0, timer = 0;
+    const next = () => {
+      const prev = i;
+      i = (i + 1) % imgs.length;
+      imgs.forEach((im, k) => { im.classList.toggle('on', k === i); im.classList.toggle('out', k === prev); });
+    };
+    const run = on => { clearInterval(timer); if (on) timer = setInterval(next, 5500); };
+    new IntersectionObserver(([e]) => run(e.isIntersecting && !document.hidden)).observe(hero);
+    document.addEventListener('visibilitychange', () => run(!document.hidden));
+  });
+
+  /* Photo viewer: any image marked data-lightbox opens full screen; arrows, swipe and Esc */
+  const shots = $$('img[data-lightbox]');
+  if (shots.length) {
+    const biggest = img => {
+      const set = (img.getAttribute('srcset') || '').split(',').map(s => s.trim().split(/\s+/)).filter(p => p[0]);
+      set.sort((a, b) => parseInt(b[1]) - parseInt(a[1]));
+      return set.length ? set[0][0] : img.currentSrc || img.src;
+    };
+    const caption = img => img.closest('figure')?.querySelector('figcaption')?.textContent || img.alt;
+    let box = null, index = 0, opener = null;
+    const show = n => {
+      index = (n + shots.length) % shots.length;
+      const img = $('img', box);
+      img.src = biggest(shots[index]);
+      img.alt = shots[index].alt;
+      $('p', box).textContent = `${caption(shots[index])} · ${index + 1} of ${shots.length}`;
+    };
+    const close = () => {
+      box.classList.remove('open');
+      document.removeEventListener('keydown', onKey);
+      setTimeout(() => { box.remove(); box = null; }, 200);
+      document.body.style.overflow = '';
+      opener?.focus();
+    };
+    const onKey = e => {
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowRight') show(index + 1);
+      else if (e.key === 'ArrowLeft') show(index - 1);
+      else if (e.key === 'Tab') { // keep focus inside the viewer
+        const btns = $$('button', box), first = btns[0], last = btns[btns.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    const open = n => {
+      opener = document.activeElement;
+      box = document.createElement('div');
+      box.className = 'lb';
+      box.setAttribute('role', 'dialog');
+      box.setAttribute('aria-modal', 'true');
+      box.setAttribute('aria-label', 'Photo viewer');
+      box.innerHTML = '<button type="button" class="lb-close" aria-label="Close">×</button><button type="button" class="lb-prev" aria-label="Previous photo">←</button><img alt=""><button type="button" class="lb-next" aria-label="Next photo">→</button><p></p>';
+      document.body.append(box);
+      document.body.style.overflow = 'hidden';
+      $('.lb-close', box).addEventListener('click', close);
+      $('.lb-prev', box).addEventListener('click', () => show(index - 1));
+      $('.lb-next', box).addEventListener('click', () => show(index + 1));
+      box.addEventListener('click', e => { if (e.target === box) close(); });
+      let x0 = null;
+      box.addEventListener('pointerdown', e => { x0 = e.clientX; });
+      box.addEventListener('pointerup', e => {
+        if (x0 === null) return;
+        const dx = e.clientX - x0; x0 = null;
+        if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
+      });
+      document.addEventListener('keydown', onKey);
+      show(n);
+      requestAnimationFrame(() => box.classList.add('open'));
+      $('.lb-close', box).focus();
+    };
+    shots.forEach((img, k) => {
+      const fig = img.closest('figure') || img;
+      fig.setAttribute('tabindex', '0');
+      fig.setAttribute('role', 'button');
+      fig.setAttribute('aria-label', `View photo: ${img.alt}`);
+      fig.addEventListener('click', () => open(k));
+      fig.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(k); } });
+    });
+  }
 
   $$('[data-year]').forEach(el => el.textContent = new Date().getFullYear());
 })();

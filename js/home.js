@@ -1,53 +1,63 @@
-/* MOMAR · homepage: hero photo reel (Wow 1) and Kaduna capacity bar (Wow 2).
+/* MOMAR · homepage: hero slideshow and Kaduna capacity bar (Wow 2).
    The supply map (Wow 3) is pure CSS, triggered by the shared reveal observer in main.js. */
 (() => {
   const { $, $$, reduce } = window.NS;
 
-  /* ---------------- Wow 1 · real project photographs, slow cross-fade ---------------- */
-  const hero = $('.hero');
-  const slides = $$('.slide', hero);
-  const reel = $('.reel', hero);
-  if (slides.length > 1 && reel) {
-    const bars = $$('.reel-bars button', reel);
-    const title = $('[data-cap-t]', reel), sub = $('[data-cap-s]', reel);
-    const HOLD = 7000;
-    const pauseBtn = $('[data-reel-pause]', reel);
-    /* autoplays by default; visitors can pause. Only a "reduce motion" system setting starts it paused */
-    let userPaused = reduce;
-    let i = 0, timer = 0, paused = false;
-    reel.style.setProperty('--t', HOLD + 'ms');
-    const syncPauseBtn = () => {
+  /* ---------------- Hero slideshow: slow zoom on each photo, label changes with it ----------------
+     Autoplays; visitors can pause, and a "reduce motion" system setting starts it paused.
+     Pauses while the hero is off screen or the tab is hidden. */
+  const hero = $('[data-slideshow]');
+  const slides = hero ? $$('.p-slide', hero) : [];
+  if (slides.length > 1) {
+    const dots = $$('.p-dots button:not([data-pause])', hero);
+    const pauseBtn = $('[data-pause]', hero);
+    const kicker = $('[data-slide-kicker]', hero);
+    const HOLD = 6000;
+    hero.style.setProperty('--hold', HOLD + 'ms');
+    let i = 0, timer = 0, userPaused = reduce, offscreen = false;
+    const running = () => !userPaused && !offscreen;
+    const show = n => {
+      const prev = i;
+      i = (n + slides.length) % slides.length;
+      slides.forEach((s, k) => {
+        s.classList.toggle('on', k === i);
+        s.classList.toggle('out', k === prev && k !== i);
+      });
+      dots.forEach((d, k) => {
+        d.setAttribute('aria-current', k === i);
+        const bar = d.firstElementChild; bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
+      });
+      if (kicker) {
+        kicker.classList.remove('swap'); void kicker.offsetWidth;
+        kicker.textContent = slides[i].dataset.kicker; kicker.classList.add('swap');
+      }
+      clearTimeout(timer);
+      if (running()) timer = setTimeout(() => show(i + 1), HOLD);
+    };
+    const sync = () => {
       pauseBtn.setAttribute('aria-pressed', userPaused);
       pauseBtn.textContent = userPaused ? 'Play' : 'Pause';
-      reel.classList.toggle('paused', userPaused || paused);
+      hero.classList.toggle('paused', !running());
     };
-    pauseBtn.addEventListener('click', () => { userPaused = !userPaused; syncPauseBtn(); show(i); });
-    const show = n => {
-      i = (n + slides.length) % slides.length;
-      slides.forEach((s, k) => s.classList.toggle('on', k === i));
-      bars.forEach((b, k) => {
-        b.classList.toggle('on', k === i);
-        b.classList.toggle('done', k < i);
-        b.setAttribute('aria-current', k === i);
-        const span = b.firstElementChild; span.style.animation = 'none'; void span.offsetWidth; span.style.animation = '';
-      });
-      title.textContent = slides[i].dataset.title;
-      sub.textContent = slides[i].dataset.sub;
-      clearTimeout(timer);
-      if (!userPaused && !paused) timer = setTimeout(() => show(i + 1), HOLD);
-    };
-    bars.forEach((b, k) => b.addEventListener('click', () => show(k)));
-    /* pause while the hero is off screen or the tab is hidden */
-    const setPaused = p => {
-      if (p === paused) return;
-      paused = p; syncPauseBtn();
-      clearTimeout(timer);
-      if (!p) show(i);
-    };
-    new IntersectionObserver(([e]) => setPaused(!e.isIntersecting)).observe(hero);
-    document.addEventListener('visibilitychange', () => setPaused(document.hidden));
-    syncPauseBtn();
+    pauseBtn.addEventListener('click', () => { userPaused = !userPaused; sync(); show(i); });
+    dots.forEach((d, k) => d.addEventListener('click', () => show(k)));
+    const setOffscreen = v => { if (v === offscreen) return; offscreen = v; sync(); clearTimeout(timer); if (!v) show(i); };
+    new IntersectionObserver(([e]) => setOffscreen(!e.isIntersecting)).observe(hero);
+    document.addEventListener('visibilitychange', () => setOffscreen(document.hidden));
+    sync();
     show(0);
+  }
+
+  /* ---------------- Featured projects: background photos of the three projects, one after another ---------------- */
+  const band = $('[data-band-slides]');
+  if (band && !reduce) {
+    const imgs = $$('img', band);
+    let k = 0, timer = 0;
+    const next = () => { imgs[k].classList.remove('on'); k = (k + 1) % imgs.length; imgs[k].classList.add('on'); };
+    new IntersectionObserver(([e]) => {
+      clearInterval(timer);
+      if (e.isIntersecting) timer = setInterval(next, 5000);
+    }).observe(band);
   }
 
   /* ---------------- Wow 2 · 464,000 L counted into eight 58,000 L tanks ---------------- */
