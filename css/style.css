@@ -1453,3 +1453,16 @@ html:not(.js) .ph-slides img.on{transform:none}
 .why-bleed .why-list{grid-template-columns:repeat(2,minmax(0,1fr))}
 .ab-figs-2{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 @media (max-width:600px){.why-bleed .why-list{grid-template-columns:1fr}}
+
+/* Home hero: company name above the headline; the photo's label sits beside the slide bars */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.p-company{display:flex;align-items:center;gap:14px;margin:0 0 16px;font:700 clamp(17px,1.7vw,22px)/1.25 var(--font-display);letter-spacing:.02em;color:#fff}
+.p-company::before{content:"";flex:none;width:34px;height:4px;background:var(--yellow)}
+.js .p-hero-text h1 .p-company{opacity:0;transform:translateY(14px);animation:rise-in .8s var(--ease) forwards}
+.js .p-hero-text>h1{animation-delay:.18s}
+.js .p-hero-text>p{animation-delay:.3s}
+.js .p-hero-text>.actions{animation-delay:.42s}
+.p-slide-label{margin-left:14px;font:600 12.5px/1.3 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--yellow);white-space:nowrap}
+.p-slide-label.swap{animation:swap .7s var(--ease)}
+@media (max-width:520px){.p-slide-label{display:none}.p-company{font-size:16px;gap:10px}.p-company::before{width:24px}}
+@media (prefers-reduced-motion:reduce){.js .p-hero-text h1 .p-company{opacity:1;transform:none}}
