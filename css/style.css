@@ -1523,5 +1523,6 @@ main{overflow-x:clip}
 .sec-head .sec-sub,.head .sec-sub{margin:10px auto 0;max-width:640px;font-size:clamp(19px,1.7vw,25px)}
 .cta .sec-sub{grid-column:1;margin:0;text-align:left}
 /* main headings yellow; subheadings white (charcoal on the white sections, where white would vanish) */
-#co-h,#svc-h,#proj-h,#where-h,#why-h,#cta-h{color:var(--yellow)!important}
+#svc-h,#proj-h,#where-h,#cta-h{color:var(--yellow)!important}
+#co-h,#why-h{color:#e31e24!important} /* About MOMAR and Why MOMAR sit on white: brand red */
 .about-bleed:not(.svc-photo) .sec-sub{color:var(--charcoal,#231f20)}
