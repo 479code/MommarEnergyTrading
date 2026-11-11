@@ -1516,3 +1516,12 @@ main{overflow-x:clip}
 .design-figs img{display:block;width:100%;height:auto;border-radius:var(--radius);border:1px solid var(--line)}
 .design-figs figcaption{margin-top:10px;font-size:14px;color:var(--text-secondary)}
 @media (max-width:760px){.design-figs{grid-template-columns:1fr}}
+
+/* home: Project portfolio heading with a subheading beneath */
+/* every homepage section: big main heading, then a yellow subheading beneath it */
+.sec-sub{display:block;font-family:var(--font-head,inherit);font-size:clamp(19px,1.7vw,25px);font-weight:600;line-height:1.3;color:#fff;margin:10px 0 18px}
+.sec-head .sec-sub,.head .sec-sub{margin:10px auto 0;max-width:640px;font-size:clamp(19px,1.7vw,25px)}
+.cta .sec-sub{grid-column:1;margin:0;text-align:left}
+/* main headings yellow; subheadings white (charcoal on the white sections, where white would vanish) */
+#co-h,#svc-h,#proj-h,#where-h,#why-h,#cta-h{color:var(--yellow)!important}
+.about-bleed:not(.svc-photo) .sec-sub{color:var(--charcoal,#231f20)}
