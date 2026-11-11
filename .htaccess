@@ -4,9 +4,13 @@ Redirect 301 /capabilities.html /services.html
 Redirect 301 /drilling.html /services.html
 Redirect 301 /marine.html /services.html
 Redirect 301 /operations.html /engineering.html
-Redirect 301 /specialist.html /procurement.html
-Redirect 301 /solar.html /cng.html
-Redirect 301 /abuja.html /projects.html
+Redirect 301 /specialist.html /engineering.html
+Redirect 301 /aviation.html /engineering.html
+Redirect 301 /procurement.html /engineering.html
+Redirect 301 /haulage.html /logistics.html
+Redirect 301 /cng.html /gas.html
+Redirect 301 /abuja.html /abuja-tank-farm.html
+Redirect 301 /suppliers.html /contact.html
 Redirect 301 /hse.html /company.html
 Redirect 301 /responsibility.html /company.html
 

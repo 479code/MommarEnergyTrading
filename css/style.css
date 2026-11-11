@@ -1466,3 +1466,53 @@ html:not(.js) .ph-slides img.on{transform:none}
 .p-slide-label.swap{animation:swap .7s var(--ease)}
 @media (max-width:520px){.p-slide-label{display:none}.p-company{font-size:16px;gap:10px}.p-company::before{width:24px}}
 @media (prefers-reduced-motion:reduce){.js .p-hero-text h1 .p-company{opacity:1;transform:none}}
+
+/* Hero: company name is the main line, tagline beneath it (client correction) */
+.p-company{font-size:clamp(34px,4.6vw,62px);line-height:1.08;letter-spacing:-.01em;margin:0 0 14px}
+.p-company::before{width:40px;height:5px}
+.p-tagline{display:block;font-size:clamp(20px,2.2vw,30px);font-weight:600;line-height:1.3}
+@media (max-width:520px){.p-company{font-size:30px;gap:10px}.p-tagline{font-size:19px}}
+
+/* slide-in animations must never widen the page on phones */
+main{overflow-x:clip}
+
+/* ===== Four service lines (Nov 2026): four-column photo grid, detailed catalogue ===== */
+@media (min-width:1101px){
+  .photo-grid.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .photo-grid.g4>:nth-child(n){top:0}
+  .photo-grid.g4>:nth-child(2n){position:relative;top:44px}
+  .photo-grid.g4>:nth-child(1){--deal:0s}.photo-grid.g4>:nth-child(2){--deal:.18s}.photo-grid.g4>:nth-child(3){--deal:.36s}.photo-grid.g4>:nth-child(4){--deal:.54s}
+  .photo-grid.g4 .pc-body{padding:22px 22px 24px}
+}
+.catalogue.detailed li>div{display:flex;flex-direction:column;gap:4px}
+.catalogue.detailed b{font-weight:600;color:var(--text)}
+.catalogue.detailed span{color:var(--text-secondary);font-size:16px}
+
+/* five service lines (Nov 2026): three across, then two wider cards */
+@media (min-width:1101px){
+  .photo-grid.g5{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .photo-grid.g5>*{grid-column:span 2}
+  .photo-grid.g5>:nth-child(n+4){grid-column:span 3}
+  .photo-grid.g5>:nth-child(n){top:0}
+  .photo-grid.g5>:nth-child(2){position:relative;top:44px}
+  .photo-grid.g5>:nth-child(4){--deal:0s}.photo-grid.g5>:nth-child(5){--deal:.22s}
+  .photo-grid.g5>:nth-child(n+4) .pc-img{aspect-ratio:16/7}
+}
+@media (min-width:761px) and (max-width:1100px){.photo-grid.g5>:nth-child(5){grid-column:1 / -1}}
+
+/* About page: the photo column stays in view beside the long company write-up */
+@media (min-width:1001px){.about-intro .two>div:first-child{position:sticky;top:110px;align-self:start}}
+
+/* four project cards in one row (Nov 2026) */
+@media (min-width:1101px){
+  .panels.p4{grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+  .panels.p4>:nth-child(n){top:0}
+  .panels.p4>:nth-child(2n){position:relative;top:44px}
+  .panels.p4>:nth-child(1){--deal:0s}.panels.p4>:nth-child(2){--deal:.18s}.panels.p4>:nth-child(3){--deal:.36s}.panels.p4>:nth-child(4){--deal:.54s}
+}
+/* Abuja tank farm: design images shown whole, side by side */
+.design-figs{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.design-figs figure{margin:0;cursor:zoom-in}
+.design-figs img{display:block;width:100%;height:auto;border-radius:var(--radius);border:1px solid var(--line)}
+.design-figs figcaption{margin-top:10px;font-size:14px;color:var(--text-secondary)}
+@media (max-width:760px){.design-figs{grid-template-columns:1fr}}
