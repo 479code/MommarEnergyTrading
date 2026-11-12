@@ -1526,3 +1526,14 @@ main{overflow-x:clip}
 #svc-h,#proj-h,#where-h,#cta-h{color:var(--yellow)!important}
 #co-h,#why-h{color:#e31e24!important} /* About MOMAR and Why MOMAR sit on white: brand red */
 .about-bleed:not(.svc-photo) .sec-sub{color:var(--charcoal,#231f20)}
+
+/* decorative numbering removed (client, Nov 2026): reclaim the space it used */
+.pc-body h3{padding-right:0}
+.row-item{grid-template-columns:1fr 1.2fr}
+.approach-grid .row-item{grid-template-columns:1fr}
+.approach-grid .row-item p{grid-column:auto}
+@media (max-width:1100px){.row-item{grid-template-columns:1fr}.row-item p{grid-column:auto}}
+
+/* home hero: supporting line under the headline */
+.p-sub{color:#fff;opacity:.92;font-size:clamp(16px,1.3vw,19px);line-height:1.55;max-width:640px;margin:16px 0 0}
+.p-tagline{letter-spacing:.01em}
