@@ -1537,3 +1537,93 @@ main{overflow-x:clip}
 /* home hero: supporting line under the headline */
 .p-sub{color:#fff;opacity:.92;font-size:clamp(16px,1.3vw,19px);line-height:1.55;max-width:640px;margin:16px 0 0}
 .p-tagline{letter-spacing:.01em}
+
+/* ===== About page (Nov 2026): short statements and dedicated sections, after the client's reference ===== */
+.ab2-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(36px,6vw,88px);align-items:center}
+.ab2-intro{padding-top:clamp(40px,5vw,72px)}
+.ab2-h{font-size:clamp(32px,3.6vw,52px);line-height:1.08;color:#e31e24;margin:0}
+.ab2-sub{font-size:clamp(19px,1.7vw,25px);font-weight:600;line-height:1.3;color:var(--charcoal);margin:12px 0 20px}
+.ab2-text p:not(.ab2-sub):not(.ab-link){max-width:560px}
+.ab2-photo{margin:0;--cut:clamp(30px,3vw,44px)}
+.ab2-photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%);border-bottom:4px solid var(--yellow)}
+.ab2-photo figcaption{margin-top:10px;font-size:14px;color:var(--text-secondary)}
+/* mission/vision + core practices cards */
+.ab2-cards{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:stretch}
+.ab2-card{background:#fff;border:1px solid var(--line);padding:clamp(28px,3.4vw,48px);--cut:clamp(26px,2.4vw,36px);clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%);border-bottom:4px solid var(--yellow)}
+.ab2-card .ab2-h{font-size:clamp(26px,2.4vw,34px);margin-bottom:12px}
+.ab2-card p{margin:0}
+.ab2-checks{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:16px}
+.ab2-checks li{display:grid;grid-template-columns:22px 1fr;column-gap:14px}
+.ab2-checks li::before{content:"";grid-row:1 / span 2;width:22px;height:22px;margin-top:2px;border-radius:50%;background:#e31e24 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12 4 4 8-8'/%3E%3C/svg%3E") center/14px no-repeat}
+.ab2-checks b{font-weight:700;color:var(--charcoal)}
+.ab2-checks span{color:var(--text-secondary);font-size:16px}
+/* history band: site's dark band with yellow heading, white subheading */
+.ab2-band .ab2-h{color:var(--yellow)}
+.ab2-band .ab2-sub{color:#fff}
+.ab2-band p{color:#d9d6d7}
+.ab2-band .link{color:#fff}
+/* our business */
+.ab2-biz{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.ab2-biz-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);padding:26px 22px;border-top:4px solid #e31e24;color:inherit;text-decoration:none;transition:transform .3s var(--ease),box-shadow .3s}
+.ab2-biz-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(16,20,26,.08)}
+.ab2-biz-card h3{font-size:19px;line-height:1.25;margin:0 0 10px}
+.ab2-biz-card p{font-size:15.5px;margin:0 0 18px;color:var(--text-secondary)}
+.ab2-biz-card .go{margin-top:auto;font-weight:600;color:#e31e24;font-size:15px}
+.head .ab2-sub{margin:12px auto 0}
+@media (max-width:1100px){.ab2-biz{grid-template-columns:repeat(2,minmax(0,1fr))}.ab2-biz-card:last-child{grid-column:1 / -1}}
+@media (max-width:860px){.ab2-split,.ab2-cards{grid-template-columns:1fr}.ab2-band .ab2-photo{order:2}}
+@media (max-width:560px){.ab2-biz{grid-template-columns:1fr}}
+
+/* About page motion: same system as the other pages (word-rise headings, staggered text, dealt cards),
+   plus a wipe-and-settle reveal for the photos */
+.js .stag.in>*:nth-child(4){transition-delay:.36s}
+.js .stag.in>*:nth-child(5){transition-delay:.48s}
+.js .stag.in>*:nth-child(6){transition-delay:.6s}
+.js .ab2-photo.rv{opacity:1;transform:none;clip-path:inset(0 100% 0 0);transition:clip-path 1.1s var(--ease)}
+.js .ab2-photo.rv.in{clip-path:inset(0 0 0 0)}
+.js .ab2-photo.rv img{transform:scale(1.12);transition:transform 1.6s var(--ease)}
+.js .ab2-photo.rv.in img{transform:none}
+.js .ab2-card.rv,.js .ab2-biz-card.rv{transition-delay:0s!important}
+.js .ab2-card.rv.in,.js .ab2-biz-card.rv.in{animation:deal .9s cubic-bezier(.2,.75,.25,1) both;animation-delay:var(--deal,0s)}
+.ab2-cards>:nth-child(2){--deal:.18s}
+.ab2-biz>:nth-child(2){--deal:.12s}.ab2-biz>:nth-child(3){--deal:.24s}.ab2-biz>:nth-child(4){--deal:.36s}.ab2-biz>:nth-child(5){--deal:.48s}
+@media (prefers-reduced-motion:reduce){.js .ab2-photo.rv{clip-path:none}.js .ab2-photo.rv img{transform:none}.js .ab2-card.rv.in,.js .ab2-biz-card.rv.in{animation:none}}
+
+/* About page v3: home page sections reused; page-specific touches only */
+.ab3-first{margin-top:0}
+.ab3-first .ab-text h1{font-size:clamp(34px,3.6vw,52px);line-height:1.08;margin:0}
+#about-h,#culture-h{color:#e31e24}
+#purpose-h,#history-h,#business-h{color:var(--yellow)}
+#business-h,#team-h{color:#e31e24}
+.ab3-mv::before{background-image:linear-gradient(100deg,rgba(var(--charcoal-rgb),.88) 0%,rgba(var(--charcoal-rgb),.62) 50%,rgba(var(--charcoal-rgb),.3) 100%),url(../assets/stock-refinery-dusk-1600.webp)}
+.ab3-mv .sec-sub{color:#fff}
+.ab3-history .sec-head p:not(.sec-sub){color:#d9d6d7;max-width:640px;margin:14px auto 0}
+.ab3-history .sec-head{max-width:820px}
+.ab3-history .center-cta{margin-top:28px}
+.head .sec-sub{color:var(--charcoal)}
+.svc-photo .head .sec-sub{color:#fff}
+.why-bleed .ab-text .btn{margin-top:22px}
+
+/* ===== Careers and People pages (Nov 2026) ===== */
+#careers-h,#people-h{color:#e31e24}
+#why-join-h{color:var(--yellow)}
+#recruit-h,#vacancies-h,#gal-h{color:#e31e24}
+.cr-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.cr-band-grid{display:grid;grid-template-columns:1fr 1fr .9fr;gap:clamp(28px,4vw,56px);align-items:center}
+.cr-band h2{margin:0}
+.cr-band .sec-sub{color:#fff}
+.cr-band p{color:#d9d6d7}
+.cr-h3{font-size:clamp(22px,1.9vw,28px);color:#fff!important;margin:0 0 6px!important}
+.cr-checks{gap:12px}
+.cr-checks li{grid-template-columns:22px 1fr;align-items:start}
+.cr-checks li::before{grid-row:auto}
+.cr-checks b{color:#fff;font-weight:600}
+.cr-step{margin:20px 0 0;font-size:clamp(19px,1.6vw,23px);font-weight:700;color:var(--yellow)!important}
+.cr-montage{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cr-montage img{display:block;width:100%;aspect-ratio:1;object-fit:cover;--cut:22px;clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%);border-bottom:3px solid var(--yellow)}
+.cr-montage img:nth-child(2){transition-delay:.12s}.cr-montage img:nth-child(3){transition-delay:.24s}.cr-montage img:nth-child(4){transition-delay:.36s}
+.cr-tracks{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-width:980px;margin:0 auto}
+.cr-tracks>:nth-child(n){top:0!important}
+.cr-tag{display:block;font-weight:700;font-size:clamp(20px,1.7vw,24px);color:#e31e24;margin-bottom:10px}
+@media (max-width:1100px){.cr-band-grid{grid-template-columns:1fr 1fr}.cr-montage{grid-column:1 / -1;grid-template-columns:repeat(4,1fr)}}
+@media (max-width:760px){.cr-band-grid{grid-template-columns:1fr}.cr-montage{grid-template-columns:1fr 1fr}.cr-tracks{grid-template-columns:1fr!important}}
